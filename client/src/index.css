@@ -1,0 +1,31 @@
+/* google font import (outline) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+/* import tailwind */
+@import "tailwindcss";
+
+*{
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+@layer base{
+  button{
+    @apply cursor-pointer;
+  }
+  input:not([type="checkbox"]){
+    @apply outline-none border border-gray-300 rounded-lg
+           focus:border-blue-500;
+  }
+  textarea{
+    @apply outline-none focus:ring border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg
+  }
+}
+
+/* Hide scrollbar but keep scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}

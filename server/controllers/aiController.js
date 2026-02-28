@@ -1,11 +1,8 @@
 import Resume from "../models/Resume.js";
 import ai from "../configs/ai.js";
 
-/**
- * =========================================
- * Enhance Professional Summary
- * =========================================
- */
+// Enhance Professional Summary
+
 export const enhanceProfessionalSummary = async (req, res) => {
   try {
     const { userContent } = req.body;
@@ -14,7 +11,6 @@ export const enhanceProfessionalSummary = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ CHANGE 1:
     // Gemini Interactions API DOES NOT support:
     // - input as array
     // - role / content
@@ -30,7 +26,7 @@ Professional Summary:
 ${userContent}
     `;
 
-    // ✅ CHANGE 2:
+
     // Use input as STRING (not array)
     const response = await ai.interactions.create({
       model: process.env.GEMINI_MODEL, // e.g. gemini-3-flash-preview
@@ -46,11 +42,9 @@ ${userContent}
   }
 };
 
-/**
- * =========================================
- * Enhance Job Description
- * =========================================
- */
+
+// Enhance Job Description
+
 export const enhanceJobDescription = async (req, res) => {
   try {
     const { userContent } = req.body;
@@ -59,7 +53,7 @@ export const enhanceJobDescription = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ CHANGE 3:
+
     // Same fix: NO role/content, NO array input
     const prompt = `
 You are an expert resume writer.
@@ -100,7 +94,7 @@ export const uploadResume = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ CHANGE 4:
+  
     // Gemini DOES NOT support JSON mode config (res_format)
     // JSON must be enforced ONLY via prompt
     const prompt = `
@@ -157,7 +151,6 @@ JSON FORMAT:
 }
     `;
 
-    // ✅ CHANGE 5:
     // REMOVE res_format COMPLETELY
     const response = await ai.interactions.create({
       model: process.env.GEMINI_MODEL,
@@ -167,7 +160,6 @@ JSON FORMAT:
     const rawText =
       response.outputs[response.outputs.length - 1].text;
 
-    // ✅ CHANGE 6:
     // Safe JSON parsing
     let parsedData;
     try {

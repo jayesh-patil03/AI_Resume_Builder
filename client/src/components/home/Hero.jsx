@@ -30,24 +30,24 @@ function Hero() {
             </a>
           </div>
 
-          <div className="flex gap-2 mt-4">
+          <div className="hidden md:flex items-center gap-3">
             <Link
               to="/app?state=register"
-              className="hidden md:block px-6 py-2 bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all rounded-full text-white"
+              className="px-5 py-2 text-sm md:text-base bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all rounded-full text-white"
               hidden={user}
             >
               Get started – It’s free
             </Link>
             <Link
               to="/app?state=login"
-              className="hidden md:block px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900"
+              className="px-5 py-2 text-sm border border-slate-300 rounded-full text-slate-900 hover:bg-slate-100 transition-all"
               hidden={user}
             >
               Login
             </Link>
             <Link
               to="/app"
-              className="hidden md:block px-8 py-2 bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all rounded-full text-white"
+              className="px-5 py-2 text-sm md:text-base bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all rounded-full text-white"
               hidden={!user}
             >
               Dashboard
@@ -90,6 +90,35 @@ function Hero() {
           <a href="#cta" className="text-white">
             Contact
           </a>
+          {!user && (
+            <>
+              <Link
+                to="/app?state=register"
+                onClick={() => setMenuOpen(false)}
+                className="bg-blue-500 text-white px-6 py-2 rounded-full"
+              >
+                Get Started
+              </Link>
+
+              <Link
+                to="/app?state=login"
+                onClick={() => setMenuOpen(false)}
+                className="border border-white text-white px-6 py-2 rounded-full"
+              >
+                Login
+              </Link>
+            </>
+          )}
+
+          {user && (
+            <Link
+              to="/app"
+              onClick={() => setMenuOpen(false)}
+              className="bg-blue-500 text-white px-6 py-2 rounded-full"
+            >
+              Dashboard
+            </Link>
+          )}
           <button
             onClick={() => setMenuOpen(false)}
             className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-blue-600 hover:bg-blue-700 transition text-white rounded-md flex"
@@ -102,9 +131,9 @@ function Hero() {
         <div className="relative flex flex-col items-center justify-center text-sm px-4 md:px-16 lg:px-24 xl:px-40 text-black mt-15">
           <div className="absolute top-28 left-1/3 -z-10 size-96 bg-blue-300 blur-[120px] opacity-30"></div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
             {/* LEFT SIDE (Resume Images) */}
-            <div className="hidden lg:flex col-span-6 justify-center relative">
+            <div className="flex col-span-6 justify-center relative order-1 lg:order-none -mt-6 sm:-mt-8 lg:mt-0">
               {/* Glow behind resumes */}
               <div className="absolute -z-10 w-80 h-72 bg-blue-600 rounded-full blur-3xl opacity-40"></div>
 
@@ -112,19 +141,19 @@ function Hero() {
               <img
                 src="/resume-2.png"
                 alt="Sample resume"
-                className="w-78 rounded-xl shadow-xl"
+                className="w-56 sm:w-64 lg:w-72 rounded-xl shadow-xl"
               />
 
               <img
                 src="/resume-1.png"
                 alt="Sample resume"
-                className="w-78 rounded-xl shadow-xl absolute top-16 left-20 rotate-3"
+                className="w-56 sm:w-64 lg:w-72 rounded-xl shadow-xl absolute top-4 sm:top-8 left-10 sm:left-20 rotate-3"
               />
             </div>
 
             {/* RIGHT SIDE (Hero Content) */}
-            <div className="col-span-6 text-center lg:text-left mt-5">
-              <h1 className="text-5xl md:text-6xl font-semibold leading-tight max-w-3xl mt-5">
+            <div className="col-span-6 text-center lg:text-left order-2 lg:order-none">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight max-w-3xl mt-5">
                 Land your dream job with{" "}
                 <span className="bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">
                   AI-powered

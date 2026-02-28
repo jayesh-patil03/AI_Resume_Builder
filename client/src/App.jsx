@@ -9,7 +9,7 @@ import Preview from "./pages/Preview.jsx";
 import { useDispatch } from "react-redux";
 import api from "./configs/api.js";
 import { setLoading } from "./app/features/authSlice.js";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,29 +17,30 @@ function App() {
   const getUserData = async () => {
     const token = localStorage.getItem("token");
     try {
-      if(token){
-        const { data } = await api.get('/api/users/data', {headers: {Authorization: token}})
-        if(data.user){
-          dispatch(Login({token, user: data.user}))
+      if (token) {
+        const { data } = await api.get("/api/users/data", {
+          headers: { Authorization: token },
+        });
+        if (data.user) {
+          dispatch(Login({ token, user: data.user }));
         }
-        dispatch(setLoading(false))
-      }
-      else{
-        dispatch(setLoading(false))
+        dispatch(setLoading(false));
+      } else {
+        dispatch(setLoading(false));
       }
     } catch (error) {
-      dispatch(setLoading(false))
-      console.log(error.message)
+      dispatch(setLoading(false));
+      console.log(error.message);
     }
   };
 
-  useEffect(()=>{
-    getUserData()
-  },[])
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <>
-    <Toaster/>
+      <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
 

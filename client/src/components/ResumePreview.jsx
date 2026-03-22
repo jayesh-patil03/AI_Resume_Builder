@@ -38,12 +38,42 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
             margin: 0;
           }
 
+          #resume-preview {
+            width: 8.5in;
+            margin: 0 auto;
+            box-sizing: border-box;
+          }
+
+          @media (max-width: 1024px) {
+            #resume-preview {
+              width: 100%;
+              max-width: 100%;
+            }
+          }
+
+          @media (max-width: 768px) {
+            #resume-preview {
+              width: 100%;
+              max-width: 100%;
+              padding: 12px;
+              font-size: 14px;
+            }
+
+            #resume-preview * {
+              font-size: inherit;
+            }
+          }
+
           @media (max-width: 640px) {
             #resume-preview {
-              transform: scale(0.85);
-              transform-origin: top center;
-              width: calc(100% / 0.85);
-              margin: 0 auto;
+              width: 100%;
+              max-width: 100%;
+              padding: 12px;
+              font-size: 13px;
+            }
+
+            #resume-preview * {
+              font-size: inherit;
             }
           }
 
@@ -68,13 +98,14 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               position: absolute;
               left: 0;
               top: 0;
-              width: 100%;
+              width: 8.5in;
               height: auto;
               margin: 0;
               padding: 0;
               box-shadow: none !important;
               border: none !important;
               transform: none;
+              font-size: 12px;
             }
           }
         `}

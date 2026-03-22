@@ -345,8 +345,6 @@ function ResumeBuilder() {
                 <div
                   className="bg-white rounded-md overflow-hidden w-full"
                   style={{
-                    transform: "scale(0.85)",
-                    transformOrigin: "top center",
                     width: "100%",
                     minHeight: "auto",
                   }}

@@ -158,7 +158,7 @@ function ResumeBuilder() {
         <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Panel - Form */}
           <div className="lg:col-span-5 order-1 lg:order-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 sticky top-4 max-h-[calc(100vh-100px)] overflow-y-auto">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 sticky top-4 no-scrollbar">
               {/* Section Navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-3 gap-2 flex-wrap">
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -341,11 +341,16 @@ function ResumeBuilder() {
               </div>
 
               {/* resume preview */}
-              <div
-                className="rounded-lg shadow-sm bg-gray-100 p-4 sm:p-6 overflow-y-auto"
-                style={{ maxHeight: "calc(100vh - 300px)" }}
-              >
-                <div className="bg-white rounded-md overflow-hidden">
+              <div className="rounded-lg shadow-sm bg-gray-100 p-2 sm:p-3 w-full no-scrollbar overflow-hidden">
+                <div
+                  className="bg-white rounded-md overflow-hidden w-full"
+                  style={{
+                    transform: "scale(0.85)",
+                    transformOrigin: "top center",
+                    width: "100%",
+                    minHeight: "auto",
+                  }}
+                >
                   <ResumePreview
                     data={resumeData}
                     template={resumeData.template}

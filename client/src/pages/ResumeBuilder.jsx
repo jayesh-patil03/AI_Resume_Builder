@@ -157,20 +157,8 @@ function ResumeBuilder() {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 pb-8 sm:pb-12">
         <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-5 order-2 lg:order-1">
+          <div className="lg:col-span-5 order-1 lg:order-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 sticky top-4 max-h-[calc(100vh-100px)] overflow-y-auto">
-              {/* progress bar using activeSectionIndex */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 rounded-t-lg">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-2000"
-                  style={{
-                    width: `${
-                      (activeSectionIndex * 100) / (section.length - 1)
-                    }%`,
-                  }}
-                />
-              </div>
-
               {/* Section Navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-3 gap-2 flex-wrap">
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -317,7 +305,7 @@ function ResumeBuilder() {
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="lg:col-span-7 order-1 lg:order-2">
+          <div className="lg:col-span-7 order-2 lg:order-2">
             <div className="sticky top-4 space-y-3">
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-end gap-2 bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
@@ -353,12 +341,17 @@ function ResumeBuilder() {
               </div>
 
               {/* resume preview */}
-              <div className="max-h-[calc(100vh-200px)] overflow-y-auto rounded-lg shadow-sm">
-                <ResumePreview
-                  data={resumeData}
-                  template={resumeData.template}
-                  accentColor={resumeData.accent_color}
-                />
+              <div
+                className="rounded-lg shadow-sm bg-gray-100 p-4 sm:p-6 overflow-y-auto"
+                style={{ maxHeight: "calc(100vh - 300px)" }}
+              >
+                <div className="bg-white rounded-md overflow-hidden">
+                  <ResumePreview
+                    data={resumeData}
+                    template={resumeData.template}
+                    accentColor={resumeData.accent_color}
+                  />
+                </div>
               </div>
             </div>
           </div>

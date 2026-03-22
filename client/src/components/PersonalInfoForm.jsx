@@ -83,42 +83,37 @@ const PersonalInfoForm = ({
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-gray-900">
-        Personal Information
-      </h3>
-      <p className="text-sm text-gray-600">
+      <h3 className="text-lg font-bold text-gray-900">Personal Information</h3>
+      <p className="text-sm text-gray-600 mb-6">
         Get started with personal information
       </p>
 
       {/* =========================
           Image Upload + Preview
          ========================= */}
-      <div className="flex items-center gap-2">
-        <label className="cursor-pointer">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8 pb-8 border-b border-gray-200">
+        <label className="cursor-pointer flex-shrink-0">
           {preview || data.image ? (
             <img
               src={
                 preview
                   ? preview
                   : typeof data.image === "string"
-                  ? data.image
-                  : undefined
+                    ? data.image
+                    : undefined
               }
               alt="user-image"
-              className="w-16 h-16 rounded-full object-cover mt-5 ring ring-slate-300 hover:opacity-80"
+              className="w-20 h-20 rounded-full object-cover ring-2 ring-slate-300 hover:opacity-80 transition-opacity"
             />
           ) : (
-            <div className="inline-flex items-center gap-2 mt-5 text-slate-600 hover:text-slate-700">
-              <User className="size-10 p-2.5 border rounded-full" />
-              upload user image
+            <div className="inline-flex items-center justify-center w-20 h-20 border-2 border-dashed border-slate-300 rounded-full hover:border-slate-400 transition-colors">
+              <div className="text-center text-slate-600 hover:text-slate-700">
+                <User className="size-8 mx-auto mb-1 opacity-50" />
+                <span className="text-xs">Upload</span>
+              </div>
             </div>
           )}
 
-          {/* =========================
-              IMPORTANT FIXES:
-              - ref added
-              - onClick reset value
-             ========================= */}
           <input
             ref={fileInputRef}
             type="file"
@@ -133,9 +128,11 @@ const PersonalInfoForm = ({
             Remove background toggle
            ========================= */}
         {typeof data.image === "object" && (
-          <div className="flex flex-col gap-1 pl-4 text-sm">
-            <p>Remove Background</p>
-            <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-medium text-gray-700">
+              Remove Background
+            </p>
+            <label className="relative inline-flex items-center cursor-pointer gap-3">
               <input
                 type="checkbox"
                 className="sr-only peer"
@@ -143,38 +140,40 @@ const PersonalInfoForm = ({
                 checked={removeBackground}
               />
 
-              <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
+              <div className="w-10 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
 
-              <span className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
+              <span className="absolute left-1 top-1.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
             </label>
           </div>
         )}
       </div>
 
       {/* =========================
-          Text Fields
+          Text Fields - Grid Layout
          ========================= */}
-      {fields.map((field) => {
-        const Icon = field.icon;
-        return (
-          <div key={field.key} className="space-y-1 mt-5">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <Icon className="size-4" />
-              {field.label}
-              {field.required && <span className="text-red-500">*</span>}
-            </label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {fields.map((field) => {
+          const Icon = field.icon;
+          return (
+            <div key={field.key} className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Icon className="size-4 text-gray-500" />
+                {field.label}
+                {field.required && <span className="text-red-500">*</span>}
+              </label>
 
-            <input
-              type={field.type}
-              value={data[field.key] || ""}
-              onChange={(e) => handleChange(field.key, e.target.value)}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 outline-none transition-colors text-sm"
-              placeholder={`Enter your ${field.label.toLowerCase()}`}
-              required={field.required}
-            />
-          </div>
-        );
-      })}
+              <input
+                type={field.type}
+                value={data[field.key] || ""}
+                onChange={(e) => handleChange(field.key, e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all text-sm placeholder:text-gray-400"
+                placeholder={`Enter your ${field.label.toLowerCase()}`}
+                required={field.required}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

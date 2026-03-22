@@ -40,7 +40,7 @@ const ExperienceForm = ({ data, onChange }) => {
       const { data } = await api.post(
         "api/ai/enhance-job-desc",
         { userContent: prompt },
-        { headers: { Authorization: token } }
+        { headers: { Authorization: token } },
       );
       updateExperience(index, "description", data.enhanceContent);
     } catch (error) {
@@ -52,16 +52,17 @@ const ExperienceForm = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900">
+            <Briefcase className="size-5" />
             Professional Experience
           </h3>
-          <p className="text-sm text-gray-500">Add your job experience</p>
+          <p className="text-sm text-gray-600">Add your job experience</p>
         </div>
         <button
           onClick={addExperience}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors "
+          className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all"
         >
           <Plus className="size-4" />
           Add Experience
@@ -69,29 +70,32 @@ const ExperienceForm = ({ data, onChange }) => {
       </div>
 
       {data.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-12 text-gray-500 border border-dashed border-gray-300 rounded-lg">
           <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <p>No work experience added yet.</p>
-          <p className="text-sm">Click "Add Experience" to get started.</p>
+          <p className="font-medium">No work experience added yet.</p>
+          <p className="text-sm mt-1">Click "Add Experience" to get started.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {data.map((experience, index) => (
             <div
               key={index}
-              className="p-4 border border-gray-200 rounded-lg space-y-3"
+              className="p-4 sm:p-6 border border-gray-300 rounded-lg space-y-4 hover:border-gray-400 transition-colors"
             >
-              <div className="flex justify-between items-start">
-                <h4>Experience #{index + 1}</h4>
+              <div className="flex justify-between items-start gap-3">
+                <h4 className="font-medium text-gray-900 text-sm sm:text-base">
+                  Experience #{index + 1}
+                </h4>
                 <button
                   onClick={() => removeExperience(index)}
-                  className="text-red-500 hover:text-red-700 transition-colors"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors flex-shrink-0"
+                  title="Remove experience"
                 >
                   <Trash2 className="size-4" />
                 </button>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <input
                   value={experience.company || ""}
                   onChange={(e) =>
@@ -99,7 +103,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   }
                   type="text"
                   placeholder="Company Name"
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 />
                 <input
                   value={experience.position || ""}
@@ -108,7 +112,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   }
                   type="text"
                   placeholder="Job Title"
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 />
                 <input
                   value={experience.start_date || ""}
@@ -116,7 +120,8 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(index, "start_date", e.target.value)
                   }
                   type="month"
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                  placeholder="Start Date"
                 />
                 <input
                   value={experience.end_date || ""}
@@ -124,12 +129,13 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(index, "end_date", e.target.value)
                   }
                   type="month"
-                  className="px-3 py-2 text-sm rounded-lg disabled:bg-gray-100"
+                  className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   disabled={experience.is_current}
+                  placeholder="End Date"
                 />
               </div>
 
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={experience.is_current || false}
@@ -137,33 +143,42 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(
                       index,
                       "is_current",
-                      e.target.checked ? true : false
+                      e.target.checked ? true : false,
                     );
                   }}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm font-medium text-gray-700">
                   Currently working here
                 </span>
               </label>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
+              <div className="space-y-2 pt-2 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <label className="text-sm font-medium text-gray-700">
                     Job Description
                   </label>
 
                   <button
                     onClick={() => generateDescription(index)}
-                    disabled={generatingIndex === index || !experience.position || !experience.company}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+                    disabled={
+                      generatingIndex === index ||
+                      !experience.position ||
+                      !experience.company
+                    }
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-purple-500 text-white rounded-lg hover:bg-purple-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                   >
                     {generatingIndex === index ? (
-                      <Loader2 className="w-3 h-3 animate-spin"/>
-                    ):(
-                      <Sparkles className="w-3 h-3" />
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        Enhancing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5" />
+                        AI Enhance
+                      </>
                     )}
-                    Enhance with AI
                   </button>
                 </div>
 
@@ -172,10 +187,8 @@ const ExperienceForm = ({ data, onChange }) => {
                   onChange={(e) =>
                     updateExperience(index, "description", e.target.value)
                   }
-                  rows={4}
-                  className="w-full text-sm px-3 py-2 rounded-lg
-    resize-none border border-gray-300
-    focus:ring-2 focus:ring-purple-500 outline-none"
+                  rows={3}
+                  className="w-full text-sm px-3 py-2.5 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all resize-none"
                   placeholder="Describe your key responsibilities and achievements..."
                 />
               </div>

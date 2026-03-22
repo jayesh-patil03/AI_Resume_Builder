@@ -12,45 +12,64 @@ const ProfessionalSummaryForm = ({ data, onChange, setResumeData }) => {
     try {
       setIsGenerating(true);
       const prompt = `enhance my professional summary "${data}"`;
-      const response = await api.post("/api/ai/enhance-pro-sum",{ userContent: prompt }, { headers: { Authorization: token } });
-      setResumeData(prev => ({...prev, professional_summary: response.data.enhanceContent}))
-      
+      const response = await api.post(
+        "/api/ai/enhance-pro-sum",
+        { userContent: prompt },
+        { headers: { Authorization: token } },
+      );
+      setResumeData((prev) => ({
+        ...prev,
+        professional_summary: response.data.enhanceContent,
+      }));
     } catch (error) {
-      toast.error(error?.response?.data?.message || error.message)
-    }
-    finally{
-      setIsGenerating(false)
+      toast.error(error?.response?.data?.message || error.message);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-gray-900">
+            <Sparkles className="size-5" />
             Professional Summary
           </h3>
-          <p className="text-sm text-gray-500">
-            Add summary for your resume here
+          <p className="text-sm text-gray-600 mt-1">
+            Highlight your key strengths and career objectives
           </p>
         </div>
-        <button disabled={isGenerating} onClick={generateSummary} className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50">
-          {isGenerating ? (<Loader2 className="size-4 animate-spin"/>) : (<Sparkles className="size-4" />)}
-          {isGenerating ? "Enhancing..." : "AI Enhance"}
+        <button
+          disabled={isGenerating || !data.trim()}
+          onClick={generateSummary}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-purple-500 text-white rounded-lg hover:bg-purple-600 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {isGenerating ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Enhancing...
+            </>
+          ) : (
+            <>
+              <Sparkles className="size-4" />
+              AI Enhance
+            </>
+          )}
         </button>
       </div>
 
-      <div className="mt-6">
+      <div className="space-y-3">
         <textarea
           value={data || ""}
           onChange={(e) => onChange(e.target.value)}
-          rows={7}
-          className="w-full p-3 px-4 mt-2 border text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none "
-          placeholder="Write a compelling professional summary that highlights your key strengths and career objectives..."
+          rows={6}
+          className="w-full p-3 sm:p-4 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
+          placeholder="Write a compelling professional summary that highlights your key strengths and career objectives (3-4 sentences are ideal)..."
         />
-        <p className="text-xs text-gray-500 max-w-4/5 mx-auto text-center">
-          Tip: keep it concies (3-4 sentences) and focus on your most relevant
-          achievements and skills,
+        <p className="text-xs text-gray-500 text-center sm:text-left">
+          💡 <strong>Tip:</strong> Keep it concise (3-4 sentences) and focus on
+          your most relevant achievements and skills.
         </p>
       </div>
     </div>

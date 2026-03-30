@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
-import Login from "./Login";
+import AuthPage from "./Login";
 
 function Layout() {
   const { user, loading } = useSelector((state) => state.auth);
@@ -22,7 +22,7 @@ function Layout() {
           </main>
         </div>
       ) : (
-        <Login />
+        <AuthPage />
       )}
     </div>
   );

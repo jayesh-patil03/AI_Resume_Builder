@@ -4,11 +4,10 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout.jsx";
 import Dashboard from "./pages/Dashboard";
 import ResumeBuilder from "./pages/ResumeBuilder.jsx";
-import Login from "./pages/Login.jsx";
 import Preview from "./pages/Preview.jsx";
 import { useDispatch } from "react-redux";
 import api from "./configs/api.js";
-import { setLoading } from "./app/features/authSlice.js";
+import { login, setLoading } from "./app/features/authSlice.js";
 import { Toaster } from "react-hot-toast";
 
 function App() {
@@ -22,7 +21,7 @@ function App() {
           headers: { Authorization: token },
         });
         if (data.user) {
-          dispatch(Login({ token, user: data.user }));
+          dispatch(login({ token, user: data.user }));
         }
         dispatch(setLoading(false));
       } else {
@@ -50,8 +49,6 @@ function App() {
         </Route>
 
         <Route path="view/:resumeId" element={<Preview />} />
-
-        {/* <Route path="login" element={<Login />} /> */}
       </Routes>
     </>
   );

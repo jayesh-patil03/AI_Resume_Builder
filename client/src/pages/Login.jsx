@@ -95,14 +95,14 @@ function Login() {
           />
         </div>
 
-        <div className="text-left mb-6">
+        {/* <div className="text-left mb-6">
           <button
             type="button"
             className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
           >
             Forgot password?
           </button>
-        </div>
+        </div> */}
 
         <button
           type="submit"

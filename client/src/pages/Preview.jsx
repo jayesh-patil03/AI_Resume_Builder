@@ -28,7 +28,7 @@ function Preview() {
 
   return resumeData ? (
     <div className="bg-slate-100">
-      <div className="max-w-3xl mx-auto py-10">
+      <div className="max-w-5xl mx-auto py-10 px-3 sm:px-4">
         <ResumePreview
           data={resumeData}
           template={resumeData.template}

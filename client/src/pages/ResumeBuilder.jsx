@@ -30,7 +30,6 @@ import toast from "react-hot-toast";
 function ResumeBuilder() {
   const { resumeId } = useParams();
   const { token } = useSelector((state) => state.auth);
-
   const [resumeData, setResumeData] = useState({
     _id: "",
     title: "",
@@ -44,6 +43,8 @@ function ResumeBuilder() {
     accent_color: "#3B82F6",
     public: false,
   });
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  const [removeBackground, setRemoveBackground] = useState(false);
 
   const loadExistingResume = async () => {
     try {
@@ -59,10 +60,7 @@ function ResumeBuilder() {
     }
   };
 
-  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
-  const [removeBackground, setRemoveBackground] = useState(false);
-
-  const section = [
+  const sections = [
     { id: "personal", name: "Personal Info", icon: User },
     { id: "summary", name: "Summary", icon: FileText },
     { id: "experience", name: "Experience", icon: Briefcase },
@@ -71,11 +69,11 @@ function ResumeBuilder() {
     { id: "skills", name: "Skills", icon: Sparkles },
   ];
 
-  const activeSection = section[activeSectionIndex];
+  const activeSection = sections[activeSectionIndex];
 
   useEffect(() => {
     loadExistingResume();
-  }, []);
+  }, [resumeId, token]);
 
   const changeResumeVisibility = async () => {
     try {
@@ -145,23 +143,23 @@ function ResumeBuilder() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-4 sm:py-6">
         <Link
           to={"/app"}
-          className="inline-flex gap-2 items-center text-slate-500 hover:text-slate-700 transition-colors text-sm"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-700"
         >
           <ArrowLeftIcon className="size-4" /> Back to Dashboard
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 pb-8 sm:pb-12">
-        <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+      <div className="mx-auto max-w-[1700px] px-4 pb-8 sm:px-4 sm:pb-12">
+        <div className="grid gap-4 lg:grid-cols-12 lg:gap-8">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-5 order-1 lg:order-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 sticky top-4 no-scrollbar">
+          <div className="lg:col-span-4 order-1 lg:order-1 print:hidden">
+            <div className="no-scrollbar rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-4">
               {/* Section Navigation */}
-              <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-3 gap-2 flex-wrap">
-                <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="mb-5 flex flex-col gap-3 border-b border-gray-200 pb-4 sm:mb-6 lg:flex-row lg:items-start lg:justify-between">
+                <div className="flex-1 min-w-[260px] max-w-full">
                   <TemplateSelector
                     selectedTemplate={resumeData.template}
                     onChange={(template) =>
@@ -170,15 +168,16 @@ function ResumeBuilder() {
                   />
                 </div>
 
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center justify-between gap-2 lg:flex-shrink-0">
                   {activeSectionIndex !== 0 && (
                     <button
+                      type="button"
                       onClick={() =>
                         setActiveSectionIndex((prevIndex) =>
                           Math.max(prevIndex - 1, 0),
                         )
                       }
-                      className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                      className="hidden items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 sm:flex"
                       disabled={activeSectionIndex === 0}
                     >
                       <ChevronLeft className="size-4" /> Previous
@@ -186,25 +185,27 @@ function ResumeBuilder() {
                   )}
 
                   <button
+                    type="button"
                     onClick={() =>
                       setActiveSectionIndex((prevIndex) =>
-                        Math.min(prevIndex + 1, section.length - 1),
+                        Math.min(prevIndex + 1, sections.length - 1),
                       )
                     }
-                    className={`hidden sm:flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors ${
-                      activeSectionIndex === section.length - 1 && "opacity-50"
+                    className={`hidden items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 sm:flex ${
+                      activeSectionIndex === sections.length - 1 && "opacity-50"
                     }`}
-                    disabled={activeSectionIndex === section.length - 1}
+                    disabled={activeSectionIndex === sections.length - 1}
                   >
                     Next <ChevronRight className="size-4" />
                   </button>
 
                   {/* Mobile nav dots */}
-                  <div className="sm:hidden flex gap-1 ml-2">
-                    {section.map((_, idx) => (
+                  <div className="flex gap-1 sm:hidden">
+                    {sections.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setActiveSectionIndex(idx)}
+                        type="button"
                         className={`w-2 h-2 rounded-full transition-all ${
                           idx === activeSectionIndex
                             ? "bg-blue-600 w-6"
@@ -294,10 +295,11 @@ function ResumeBuilder() {
                 )}
               </div>
               <button
+                type="button"
                 onClick={() => {
                   toast.promise(saveResume, { loading: "saving..." });
                 }}
-                className="w-full mt-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white font-medium px-6 py-2.5 rounded-lg hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all text-sm"
+                className="mt-6 w-full rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 active:scale-95"
               >
                 Save changes
               </button>
@@ -305,22 +307,24 @@ function ResumeBuilder() {
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="lg:col-span-7 order-2 lg:order-2">
-            <div className="sticky top-4 space-y-3">
+          <div className="lg:col-span-8 order-2 lg:order-2 print:col-span-12">
+            <div className="space-y-3 lg:sticky lg:top-4 print:static">
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-end gap-2 bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-end gap-2 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:hidden">
                 {resumeData.public && (
                   <button
+                    type="button"
                     onClick={handleShare}
-                    className="flex items-center justify-center gap-1 px-3 py-2 text-xs sm:text-sm bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-lg hover:from-blue-200 hover:to-blue-300 transition-colors font-medium"
+                    className="flex items-center justify-center gap-1 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 px-3 py-2 text-xs font-medium text-blue-600 transition-colors hover:from-blue-200 hover:to-blue-300 sm:text-sm"
                   >
                     <Share2Icon className="size-4" />
                     <span className="hidden sm:inline">Share</span>
                   </button>
                 )}
                 <button
+                  type="button"
                   onClick={changeResumeVisibility}
-                  className="flex items-center justify-center gap-1 px-3 py-2 text-xs sm:text-sm bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 rounded-lg hover:from-purple-200 hover:to-purple-300 transition-colors font-medium"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-gradient-to-br from-purple-100 to-purple-200 px-3 py-2 text-xs font-medium text-purple-600 transition-colors hover:from-purple-200 hover:to-purple-300 sm:text-sm"
                 >
                   {resumeData.public ? (
                     <EyeIcon className="size-4" />
@@ -332,8 +336,9 @@ function ResumeBuilder() {
                   </span>
                 </button>
                 <button
+                  type="button"
                   onClick={downloadResume}
-                  className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-lg hover:from-blue-200 hover:to-blue-300 transition-colors font-medium"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 px-3 py-2 text-xs font-medium text-blue-600 transition-colors hover:from-blue-200 hover:to-blue-300 sm:px-4 sm:text-sm"
                 >
                   <DownloadIcon className="size-4" />
                   <span className="hidden sm:inline">Download</span>
@@ -341,9 +346,9 @@ function ResumeBuilder() {
               </div>
 
               {/* resume preview */}
-              <div className="rounded-lg shadow-sm bg-gray-100 p-2 sm:p-3 w-full no-scrollbar overflow-hidden">
+              <div className="no-scrollbar w-full overflow-hidden rounded-2xl bg-gray-100 p-2 shadow-sm sm:p-3 lg:p-4 print:overflow-visible print:bg-white print:p-0 print:shadow-none">
                 <div
-                  className="bg-white rounded-md overflow-hidden w-full"
+                  className="w-full overflow-hidden rounded-xl bg-white print:overflow-visible"
                   style={{
                     width: "100%",
                     minHeight: "auto",

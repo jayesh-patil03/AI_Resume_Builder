@@ -1,37 +1,80 @@
-import React from "react";
-import ClassicTemplate from "./templates/ClassicTemplate";
-import ModernTemplate from "./templates/ModernTemplate";
-import MinimalTemplate from "./templates/MinimalTemplate";
-import MinimalImageTemplate from "./templates/MinimalImageTemplate";
+import React, { useEffect, useRef, useState } from "react";
+import { templateComponents } from "./templates/templateRegistry";
+
+const PAGE_WIDTH = 816;
+const PAGE_HEIGHT = 1056;
 
 const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
-  const rendertemplate = () => {
-    switch (template) {
-      case "modern":
-        return <ModernTemplate data={data} accentColor={accentColor} />;
-      case "minimal":
-        return <MinimalTemplate data={data} accentColor={accentColor} />;
-      case "minimal-image":
-        return <MinimalImageTemplate data={data} accentColor={accentColor} />;
+  const TemplateComponent =
+    templateComponents[template] || templateComponents.classic;
+  const containerRef = useRef(null);
+  const previewRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [previewHeight, setPreviewHeight] = useState(PAGE_HEIGHT);
 
-      default:
-        return <ClassicTemplate data={data} accentColor={accentColor} />;
+  useEffect(() => {
+    const updatePreviewLayout = () => {
+      if (!containerRef.current || !previewRef.current) {
+        return;
+      }
+
+      const containerWidth = containerRef.current.clientWidth;
+      const nextScale = containerWidth
+        ? Math.min(1, containerWidth / PAGE_WIDTH)
+        : 1;
+
+      setScale(nextScale);
+      setPreviewHeight(Math.max(previewRef.current.scrollHeight, PAGE_HEIGHT));
+    };
+
+    updatePreviewLayout();
+
+    const resizeObserver = new ResizeObserver(updatePreviewLayout);
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
     }
-  };
+
+    if (previewRef.current) {
+      resizeObserver.observe(previewRef.current);
+    }
+
+    window.addEventListener("resize", updatePreviewLayout);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updatePreviewLayout);
+    };
+  }, [data, template, accentColor]);
 
   return (
-    <div className="w-full bg-gray-100 rounded-lg overflow-hidden">
+    <div
+      ref={containerRef}
+      className="w-full overflow-hidden rounded-lg bg-gray-100 print:overflow-visible print:bg-white"
+    >
       <div
-        id="resume-preview"
-        className={
-          "border border-gray-300 print:shadow-none print:border-none bg-white" +
-          classes
-        }
+        className="mx-auto flex justify-center"
+        style={{
+          width: `${PAGE_WIDTH * scale}px`,
+          height: `${previewHeight * scale}px`,
+          maxWidth: "100%",
+        }}
       >
-        {rendertemplate()}
+        <div
+          id="resume-preview"
+          ref={previewRef}
+          className={`origin-top border border-gray-300 bg-white shadow-sm print:border-none print:shadow-none ${classes}`}
+          style={{
+            width: `${PAGE_WIDTH}px`,
+            minHeight: `${PAGE_HEIGHT}px`,
+            transform: `scale(${scale})`,
+          }}
+        >
+          <TemplateComponent data={data} accentColor={accentColor} />
+        </div>
       </div>
 
-      <style jsx>
+      <style>
         {`
           @page {
             size: letter;
@@ -39,50 +82,21 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
           }
 
           #resume-preview {
-            width: 8.5in;
             margin: 0 auto;
             box-sizing: border-box;
           }
 
-          @media (max-width: 1024px) {
-            #resume-preview {
-              width: 100%;
-              max-width: 100%;
-            }
-          }
-
-          @media (max-width: 768px) {
-            #resume-preview {
-              width: 100%;
-              max-width: 100%;
-              padding: 12px;
-              font-size: 14px;
-            }
-
-            #resume-preview * {
-              font-size: inherit;
-            }
-          }
-
-          @media (max-width: 640px) {
-            #resume-preview {
-              width: 100%;
-              max-width: 100%;
-              padding: 12px;
-              font-size: 13px;
-            }
-
-            #resume-preview * {
-              font-size: inherit;
-            }
+          #resume-preview > * {
+            min-height: 100%;
           }
 
           @media print {
             html,
             body {
-              width: 8.5in;
-              height: 11in;
-              overflow: hidden;
+              margin: 0;
+              padding: 0;
+              background: white;
+              overflow: visible !important;
             }
 
             body * {
@@ -99,13 +113,15 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               left: 0;
               top: 0;
               width: 8.5in;
+              min-height: 11in;
               height: auto;
               margin: 0;
-              padding: 0;
+              padding: 0 !important;
+              transform: none;
               box-shadow: none !important;
               border: none !important;
-              transform: none;
-              font-size: 12px;
+              overflow: visible !important;
+              background: white !important;
             }
           }
         `}

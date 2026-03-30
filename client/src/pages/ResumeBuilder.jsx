@@ -142,7 +142,7 @@ function ResumeBuilder() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen overflow-x-hidden bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-4 sm:py-6">
         <Link
           to={"/app"}
@@ -152,14 +152,14 @@ function ResumeBuilder() {
         </Link>
       </div>
 
-      <div className="mx-auto max-w-[1700px] px-4 pb-8 sm:px-4 sm:pb-12">
-        <div className="grid gap-4 lg:grid-cols-12 lg:gap-8">
+      <div className="mx-auto max-w-7xl px-4 pb-8 sm:px-4 sm:pb-12">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-8">
           {/* Left Panel - Form */}
-          <div className="lg:col-span-4 order-1 lg:order-1 print:hidden">
+          <div className="order-1 print:hidden lg:order-1 lg:col-span-4">
             <div className="no-scrollbar rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-4">
               {/* Section Navigation */}
-              <div className="mb-5 flex flex-col gap-3 border-b border-gray-200 pb-4 sm:mb-6 lg:flex-row lg:items-start lg:justify-between">
-                <div className="flex-1 min-w-[260px] max-w-full">
+              <div className="mb-5 flex flex-col gap-3 border-b border-gray-200 pb-4 sm:mb-6">
+                <div className="w-full">
                   <TemplateSelector
                     selectedTemplate={resumeData.template}
                     onChange={(template) =>
@@ -168,7 +168,7 @@ function ResumeBuilder() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-2 lg:flex-shrink-0">
+                <div className="flex items-center justify-between gap-2">
                   {activeSectionIndex !== 0 && (
                     <button
                       type="button"
@@ -191,7 +191,7 @@ function ResumeBuilder() {
                         Math.min(prevIndex + 1, sections.length - 1),
                       )
                     }
-                    className={`hidden items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 sm:flex ${
+                    className={`ml-auto hidden items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 sm:flex ${
                       activeSectionIndex === sections.length - 1 && "opacity-50"
                     }`}
                     disabled={activeSectionIndex === sections.length - 1}
@@ -200,7 +200,7 @@ function ResumeBuilder() {
                   </button>
 
                   {/* Mobile nav dots */}
-                  <div className="flex gap-1 sm:hidden">
+                  <div className="flex w-full justify-center gap-1 sm:hidden">
                     {sections.map((_, idx) => (
                       <button
                         key={idx}
@@ -307,7 +307,7 @@ function ResumeBuilder() {
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="lg:col-span-8 order-2 lg:order-2 print:col-span-12">
+          <div className="order-2 lg:order-2 lg:col-span-8 print:col-span-12">
             <div className="space-y-3 lg:sticky lg:top-4 print:static">
               {/* Action Buttons */}
               <div className="flex items-center justify-end gap-2 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:hidden">

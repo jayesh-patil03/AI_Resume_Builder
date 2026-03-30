@@ -50,12 +50,12 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
   return (
     <div
       ref={containerRef}
-      className="w-full overflow-hidden rounded-lg bg-gray-100 print:overflow-visible print:bg-white"
+      className="w-full overflow-x-hidden rounded-lg bg-gray-100 print:overflow-visible print:bg-white"
     >
       <div
         className="mx-auto flex justify-center"
         style={{
-          width: `${PAGE_WIDTH * scale}px`,
+          width: "100%",
           height: `${previewHeight * scale}px`,
           maxWidth: "100%",
         }}
@@ -63,11 +63,10 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
         <div
           id="resume-preview"
           ref={previewRef}
-          className={`origin-top border border-gray-300 bg-white shadow-sm print:border-none print:shadow-none ${classes}`}
+          className={`origin-top border border-transparent bg-white sm:border-gray-300 sm:shadow-sm print:border-none print:shadow-none ${classes}`}
           style={{
-            width: `${PAGE_WIDTH}px`,
-            minHeight: `${PAGE_HEIGHT}px`,
-            transform: `scale(${scale})`,
+            width: "100%",
+            height: `${previewHeight * scale}px`,
           }}
         >
           <TemplateComponent data={data} accentColor={accentColor} />
@@ -77,13 +76,14 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       <style>
         {`
           @page {
-            size: letter;
+            size: A4;
             margin: 0;
           }
 
           #resume-preview {
             margin: 0 auto;
             box-sizing: border-box;
+            transform-origin: top center;
           }
 
           #resume-preview > * {
@@ -112,8 +112,8 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               position: absolute;
               left: 0;
               top: 0;
-              width: 8.5in;
-              min-height: 11in;
+              width: 210mm;
+              min-height: 297mm;
               height: auto;
               margin: 0;
               padding: 0 !important;

@@ -26,22 +26,19 @@ Professional Summary:
 ${userContent}
     `;
 
-
     // Use input as STRING (not array)
     const response = await ai.interactions.create({
-      model: process.env.GEMINI_MODEL, // e.g. gemini-3-flash-preview
+      model: process.env.GEMINI_MODEL, 
       input: prompt,
     });
 
-    const enhanceContent =
-      response.outputs[response.outputs.length - 1].text;
+    const enhanceContent = response.outputs[response.outputs.length - 1].text;
 
     return res.status(200).json({ enhanceContent });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
-
 
 // Enhance Job Description
 
@@ -53,8 +50,6 @@ export const enhanceJobDescription = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-
-    // Same fix: NO role/content, NO array input
     const prompt = `
 You are an expert resume writer.
 
@@ -71,8 +66,7 @@ ${userContent}
       input: prompt,
     });
 
-    const enhanceContent =
-      response.outputs[response.outputs.length - 1].text;
+    const enhanceContent = response.outputs[response.outputs.length - 1].text;
 
     return res.status(200).json({ enhanceContent });
   } catch (error) {
@@ -81,9 +75,7 @@ ${userContent}
 };
 
 /**
- * =========================================
  * Upload Resume & Extract Data
- * =========================================
  */
 export const uploadResume = async (req, res) => {
   try {
@@ -94,7 +86,6 @@ export const uploadResume = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-  
     // Gemini DOES NOT support JSON mode config (res_format)
     // JSON must be enforced ONLY via prompt
     const prompt = `
@@ -157,8 +148,7 @@ JSON FORMAT:
       input: prompt,
     });
 
-    const rawText =
-      response.outputs[response.outputs.length - 1].text;
+    const rawText = response.outputs[response.outputs.length - 1].text;
 
     // Safe JSON parsing
     let parsedData;

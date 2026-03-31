@@ -5,7 +5,7 @@ Create, edit, enhance, preview, download, and share professional resumes with AI
 
 ## Live Demo
 
-Primary Live App (AWS EC2): http://65.2.148.132  
+Primary Live App (AWS EC2): http://15.206.192.162 
 Vercel Fallback: https://ai-resume-builder-pi-ten.vercel.app/  
 Repository: https://github.com/jayesh-patil03/AI_Resume_Builder.git
 

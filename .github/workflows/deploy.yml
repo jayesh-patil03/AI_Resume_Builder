@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,3 +30,23 @@ jobs:
 
       - name: Push Frontend Image
         run: docker push jayeshpatil2512/resume-frontend
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull jayeshpatil2512/resume-backend
+            docker pull jayeshpatil2512/resume-frontend
+
+            docker stop resume-backend || true
+            docker stop resume-frontend || true
+
+            docker rm resume-backend || true
+            docker rm resume-frontend || true
+
+            docker run -d -p 3000:3000 --env-file /home/ubuntu/.env --name resume-backend jayeshpatil2512/resume-backend
+
+            docker run -d -p 80:80 --name resume-frontend jayeshpatil2512/resume-frontend

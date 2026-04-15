@@ -47,6 +47,6 @@ jobs:
             docker rm resume-backend || true
             docker rm resume-frontend || true
 
-            docker run -d -p 3000:3000 --env-file /home/ubuntu/.env --name resume-backend jayeshpatil2512/resume-backend
+            docker run -d -p 5000:3000 --env-file /home/ubuntu/.env --name resume-backend jayeshpatil2512/resume-backend
 
-            docker run -d -p 80:80 --name resume-frontend jayeshpatil2512/resume-frontend
+            docker run -d -p 8080:80 --name resume-frontend jayeshpatil2512/resume-frontend

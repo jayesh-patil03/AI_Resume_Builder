@@ -1,6 +1,26 @@
 import Resume from "../models/Resume.js";
 import ai from "../configs/ai.js";
 
+const getGeminiModel = () => process.env.GEMINI_MODEL || "gemini-2.5-flash";
+
+const generateText = async (prompt) => {
+  const response = await ai.models.generateContent({
+    model: getGeminiModel(),
+    contents: prompt,
+  });
+
+  const text =
+    typeof response.text === "string"
+      ? response.text
+      : await response.text?.();
+
+  if (!text) {
+    throw new Error("AI returned an empty response");
+  }
+
+  return text.trim();
+};
+
 // Enhance Professional Summary
 
 export const enhanceProfessionalSummary = async (req, res) => {
@@ -11,10 +31,6 @@ export const enhanceProfessionalSummary = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Gemini Interactions API DOES NOT support:
-    // - input as array
-    // - role / content
-    // So we combine everything into ONE STRING prompt
     const prompt = `
 You are an expert in resume writing.
 
@@ -26,13 +42,7 @@ Professional Summary:
 ${userContent}
     `;
 
-    // Use input as STRING (not array)
-    const response = await ai.interactions.create({
-      model: process.env.GEMINI_MODEL, 
-      input: prompt,
-    });
-
-    const enhanceContent = response.outputs[response.outputs.length - 1].text;
+    const enhanceContent = await generateText(prompt);
 
     return res.status(200).json({ enhanceContent });
   } catch (error) {
@@ -61,12 +71,7 @@ Job Description:
 ${userContent}
     `;
 
-    const response = await ai.interactions.create({
-      model: process.env.GEMINI_MODEL,
-      input: prompt,
-    });
-
-    const enhanceContent = response.outputs[response.outputs.length - 1].text;
+    const enhanceContent = await generateText(prompt);
 
     return res.status(200).json({ enhanceContent });
   } catch (error) {
@@ -86,8 +91,6 @@ export const uploadResume = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Gemini DOES NOT support JSON mode config (res_format)
-    // JSON must be enforced ONLY via prompt
     const prompt = `
 You are an expert AI agent that extracts structured data from resumes.
 
@@ -142,13 +145,7 @@ JSON FORMAT:
 }
     `;
 
-    // REMOVE res_format COMPLETELY
-    const response = await ai.interactions.create({
-      model: process.env.GEMINI_MODEL,
-      input: prompt,
-    });
-
-    const rawText = response.outputs[response.outputs.length - 1].text;
+    const rawText = await generateText(prompt);
 
     // Safe JSON parsing
     let parsedData;
